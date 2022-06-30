@@ -1,0 +1,40 @@
+definitions:
+  SignUpRequest:
+    properties:
+      Email:
+        type: string
+      Password:
+        type: string
+    type: object
+    x-go-package: go_auth
+  UserResponse:
+    properties:
+      Email:
+        type: string
+      ID:
+        format: uint64
+        type: integer
+    type: object
+    x-go-package: go_auth
+paths:
+  /sign_up:
+    post:
+      operationId: idSignUp
+      parameters:
+      - description: Signs up a new user.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/SignUpRequest'
+      responses:
+        "201":
+          $ref: '#/responses/signUpSuccessResponse'
+      summary: Signs up a new user.
+      tags:
+      - SignUp
+responses:
+  signUpSuccessResponse:
+    description: Successful sign up response.
+    schema:
+      $ref: '#/definitions/UserResponse'
+swagger: "2.0"
