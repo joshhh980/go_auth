@@ -1,40 +1,112 @@
 definitions:
-  SignUpRequest:
-    properties:
-      Email:
-        type: string
-      Password:
-        type: string
-    type: object
-    x-go-package: go_auth
-  UserResponse:
-    properties:
-      Email:
-        type: string
-      ID:
-        format: uint64
-        type: integer
-    type: object
-    x-go-package: go_auth
+    LoginRequest:
+        properties:
+            email:
+                example: example@mail.com
+                type: string
+                x-go-name: Email
+            password:
+                type: string
+                x-go-name: Password
+        required:
+            - email
+            - password
+        type: object
+        x-go-package: go_auth/requests
+    SignUpRequest:
+        properties:
+            c_password:
+                type: string
+                x-go-name: C_Password
+            email:
+                example: example@mail.com
+                type: string
+                x-go-name: Email
+            name:
+                example: User
+                type: string
+                x-go-name: Name
+            password:
+                type: string
+                x-go-name: Password
+        required:
+            - email
+            - password
+            - name
+            - c_password
+        type: object
+        x-go-package: go_auth/requests
+    UserResponse:
+        properties:
+            email:
+                type: string
+                x-go-name: Email
+            id:
+                format: uint64
+                type: integer
+                x-go-name: ID
+            name:
+                type: string
+                x-go-name: Name
+        type: object
+        x-go-package: go_auth/responses
 paths:
-  /sign_up:
-    post:
-      operationId: idSignUp
-      parameters:
-      - description: Signs up a new user.
-        in: body
-        name: Body
-        schema:
-          $ref: '#/definitions/SignUpRequest'
-      responses:
-        "201":
-          $ref: '#/responses/signUpSuccessResponse'
-      summary: Signs up a new user.
-      tags:
-      - SignUp
+    /login:
+        post:
+            operationId: idLogin
+            parameters:
+                - description: Login a user.
+                  in: body
+                  name: Body
+                  schema:
+                    $ref: '#/definitions/LoginRequest'
+            responses:
+                "201":
+                    $ref: '#/responses/loginSuccessResponse'
+                "422":
+                    $ref: '#/responses/invalidResponse'
+            summary: Logs in a user.
+            tags:
+                - Auth
+    /sign_up:
+        post:
+            operationId: idSignUp
+            parameters:
+                - description: Signs up a new user.
+                  in: body
+                  name: Body
+                  schema:
+                    $ref: '#/definitions/SignUpRequest'
+            responses:
+                "201":
+                    $ref: '#/responses/signUpSuccessResponse'
+                "422":
+                    $ref: '#/responses/invalidResponse'
+            summary: Signs up a new user.
+            tags:
+                - Auth
 responses:
-  signUpSuccessResponse:
-    description: Successful sign up response.
-    schema:
-      $ref: '#/definitions/UserResponse'
+    invalidResponse:
+        description: Invalid response.
+        schema:
+            properties:
+                Err:
+                    type: string
+            type: object
+    loginSuccessResponse:
+        description: Successful login response.
+        headers:
+            Authorization:
+                description: Authorization header
+                type: string
+        schema:
+            $ref: '#/definitions/UserResponse'
+    signUpSuccessResponse:
+        description: Successful sign up response.
+        headers:
+            Authorization:
+                description: Authorization header
+                type: string
+        schema:
+            $ref: '#/definitions/UserResponse'
 swagger: "2.0"

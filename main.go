@@ -11,28 +11,7 @@ import (
 func main() {
 	consts.InitializeDB()
 	r := mux.NewRouter()
-	r.HandleFunc("/", handlers.SignUpHandler).Methods("POST")
+	r.HandleFunc("/sign_up", handlers.SignUpHandler).Methods("POST")
+	r.HandleFunc("/login", handlers.LoginHandler).Methods("POST")
 	http.ListenAndServe(":8090", r)
-}
-
-// swagger:route POST /sign_up SignUp idSignUp
-// Signs up a new user.
-// responses:
-//   201: signUpSuccessResponse
-
-// swagger:parameters idSignUp
-type signUpParamsWrapper struct {
-	// Signs up a new user.
-	// in:body
-	Body handlers.SignUpRequest
-}
-
-// Successful sign up response.
-// swagger:response signUpSuccessResponse
-type signUpResponseWrapper struct {
-	// Authorization header
-	Authorization string
-
-	// in:body
-	Body handlers.UserResponse
 }

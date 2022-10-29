@@ -1,11 +1,22 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"go_auth/responses"
 
-// User contains the properties of a user.
+	"gorm.io/gorm"
+)
+
 type User struct {
 	gorm.Model
 	ID       uint `gorm:"primary_key"`
 	Email    string
-	Password string `json:"-"`
+	Password string
+	Name     string
+}
+
+func (u User) BuildUser() responses.UserResponse {
+	return responses.UserResponse{
+		ID:    u.ID,
+		Email: u.Email,
+	}
 }

@@ -7,9 +7,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// Create the JWT key used to create the signature
-var JwtKey = []byte("my_secret_key")
-
 var DB *gorm.DB
 
 func InitializeDB() {
