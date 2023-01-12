@@ -12,6 +12,7 @@ var user models.User
 
 func buildUser() models.User {
 	return models.User{
+		Name:     "Example",
 		Email:    "example@mail.com",
 		Password: "12345678",
 	}
@@ -25,7 +26,7 @@ func handle(jsonStr []byte, w *httptest.ResponseRecorder) ([]byte, *httptest.Res
 }
 
 func makeRequest(path string, jsonStr []byte) (*http.Request, *httptest.ResponseRecorder) {
-	req := httptest.NewRequest(http.MethodPost, "/sign_up", bytes.NewBuffer(jsonStr))
+	req := httptest.NewRequest(http.MethodPost, path, bytes.NewBuffer(jsonStr))
 	w := httptest.NewRecorder()
 	return req, w
 }

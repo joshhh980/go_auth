@@ -18,5 +18,6 @@ func (u User) BuildUser() responses.UserResponse {
 	return responses.UserResponse{
 		ID:    u.ID,
 		Email: u.Email,
+		Name:  u.Name,
 	}
 }
