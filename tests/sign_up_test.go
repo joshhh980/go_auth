@@ -46,8 +46,9 @@ func (suite *SignUpTestSuite) TestUserAlreadyExists() {
 	consts.DB.Create(&user)
 	suite.NotNil(user.Email)
 	data, r := handleSignUp(loginParams)
-	s := string(data)
-	suite.Equal("Email already exists\n", s)
+	response := map[string]interface{}{}
+	json.Unmarshal(data, &response)
+	suite.Contains(response["errors"], "Email already exists")
 	suite.Equal(http.StatusBadRequest, r.Code)
 }
 
@@ -55,17 +56,19 @@ func (suite *LoginTestSuite) TestInvalidSignUp() {
 
 	var tests = []struct {
 		input    []byte
+		key      string
 		expected string
 	}{
-		{loginParamsBlankEmail, "Email can't be blank\n"},
-		{loginParamsInvalidEmail, "Email must be valid\n"},
-		{loginParamsBlankPassword, "Password can't be blank\n"},
+		{loginParamsBlankEmail, "email", "Email can't be blank"},
+		{loginParamsInvalidEmail, "email", "Email must be valid"},
+		{loginParamsBlankPassword, "password", "Password can't be blank"},
 	}
 
 	for _, test := range tests {
 		data, r := handleSignUp(test.input)
-		s := string(data)
-		suite.Equal(test.expected, s)
+		body := map[string]interface{}{}
+		json.Unmarshal(data, &body)
+		suite.Contains(body[test.key], test.expected)
 		suite.Equal(http.StatusBadRequest, r.Code)
 	}
 }

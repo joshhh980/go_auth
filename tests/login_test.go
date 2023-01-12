@@ -76,20 +76,39 @@ func (suite *LoginTestSuite) TestInvalidLogin() {
 
 	var tests = []struct {
 		input    []byte
+		key      string
 		expected string
 	}{
-		{loginParamsBlankEmail, "Email can't be blank\n"},
-		{loginParamsInvalidEmail, "Email must be valid\n"},
-		{loginParamsBlankPassword, "Password can't be blank\n"},
-		{invalidloginParamsEmail, "Invalid Email or Password\n"},
-		{invalidloginParamsPassword, "Invalid Email or Password\n"},
+		{loginParamsBlankEmail, "email", "Email can't be blank"},
+		{loginParamsInvalidEmail, "email", "Email must be valid"},
+		{loginParamsBlankPassword, "password", "Password can't be blank"},
 	}
 
 	for _, test := range tests {
 		data, r := handleLogin(test.input)
-		s := string(data)
-		suite.Equal(test.expected, s)
+		body := map[string]interface{}{}
+		json.Unmarshal(data, &body)
+		suite.Contains(body[test.key], test.expected)
 		suite.Equal(http.StatusBadRequest, r.Code)
+	}
+}
+
+func (suite *LoginTestSuite) TestInvalidLoginCredentails() {
+
+	var tests = []struct {
+		input    []byte
+		expected string
+	}{
+		{invalidloginParamsEmail, "Invalid Email or Password"},
+		{invalidloginParamsPassword, "Invalid Email or Password"},
+	}
+
+	for _, test := range tests {
+		data, r := handleLogin(test.input)
+		body := map[string]interface{}{}
+		json.Unmarshal(data, &body)
+		suite.Contains(body["errors"], test.expected)
+		suite.Equal(http.StatusUnauthorized, r.Code)
 	}
 }
 
