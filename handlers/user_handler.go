@@ -42,14 +42,26 @@ func UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	var signUpRequest requests.UserRequest
-	if err := json.NewDecoder(r.Body).Decode(&signUpRequest); err != nil {
+	var userRequest requests.UserRequest
+	if err := json.NewDecoder(r.Body).Decode(&userRequest); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	consts.DB.Model(&user).Updates(models.User{
-		Email: signUpRequest.Email,
-		Name:  signUpRequest.Name,
+		Email: userRequest.Email,
+		Name:  userRequest.Name,
 	})
 	json.NewEncoder(w).Encode(user.BuildUser())
+}
+
+// swagger:route DELETE /user idDeleteUser
+// Delete user.
+// responses:
+//   200: successResponse
+func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
+	user, err := helpers.CurrentUser(w, r)
+	if err != nil {
+		return
+	}
+	consts.DB.Delete(&user)
 }

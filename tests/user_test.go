@@ -6,6 +6,7 @@ import (
 	"go_auth/consts"
 	"go_auth/handlers"
 	"go_auth/helpers"
+	"go_auth/models"
 	"go_auth/responses"
 	"io/ioutil"
 	"net/http"
@@ -69,6 +70,17 @@ func (suite *UserTestSuite) TestUpdateUser() {
 	json.Unmarshal(data, _user)
 	suite.Equal("example@mail.com", _user.Email)
 	suite.Equal("Update", _user.Name)
+}
+
+func (suite *UserTestSuite) TestDeleteUser() {
+	token, _ := helpers.SignToken(user)
+	_, r := handleUser(token, http.MethodDelete, []byte{}, handlers.DeleteUserHandler)
+	suite.Equal(http.StatusOK, r.Code)
+	var _user models.User
+	consts.DB.Find(&_user, models.User{
+		ID: user.ID,
+	})
+	suite.Equal("", _user.Name)
 }
 
 func TestUserTestSuite(t *testing.T) {

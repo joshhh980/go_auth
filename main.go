@@ -16,6 +16,7 @@ func main() {
 	r.HandleFunc("/login", handlers.LoginHandler).Methods("POST")
 	r.HandleFunc("/user", handlers.ShowUserHandler).Methods("GET")
 	r.HandleFunc("/user", handlers.UpdateUserHandler).Methods("PUT")
+	r.HandleFunc("/user", handlers.DeleteUserHandler).Methods("DELETE")
 	http.ListenAndServe(":3000", muxHandler.CORS(
 		muxHandler.AllowedOrigins([]string{"*"}),
 		muxHandler.AllowedMethods([]string{"POST", "GET", "PUT", "DELETE"}),
