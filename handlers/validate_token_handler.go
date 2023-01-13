@@ -6,8 +6,8 @@ import (
 	"net/http"
 )
 
-// swagger:route GET /validate_token
-// Validates token and returns user.
+// swagger:route GET /user
+// Get current user.
 // responses:
 //   201: successResponse
 //   401: invalidResponse
