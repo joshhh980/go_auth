@@ -21,7 +21,9 @@ func ShowUserHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	json.NewEncoder(w).Encode(user.BuildUser())
+	if user.Email != "" {
+		json.NewEncoder(w).Encode(user.BuildUser())
+	}
 }
 
 // swagger:route PUT /user idUpdateUser
