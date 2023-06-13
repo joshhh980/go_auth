@@ -36,6 +36,16 @@ definitions:
             - c_password
         type: object
         x-go-package: go_auth/requests
+    UserRequest:
+        properties:
+            email:
+                type: string
+                x-go-name: Email
+            name:
+                type: string
+                x-go-name: Name
+        type: object
+        x-go-package: go_auth/requests
     UserResponse:
         properties:
             email:
@@ -62,12 +72,10 @@ paths:
                     $ref: '#/definitions/LoginRequest'
             responses:
                 "201":
-                    $ref: '#/responses/loginSuccessResponse'
+                    $ref: '#/responses/successResponse'
                 "422":
                     $ref: '#/responses/invalidResponse'
             summary: Logs in a user.
-            tags:
-                - Auth
     /sign_up:
         post:
             operationId: idSignUp
@@ -79,10 +87,59 @@ paths:
                     $ref: '#/definitions/SignUpRequest'
             responses:
                 "201":
-                    $ref: '#/responses/signUpSuccessResponse'
+                    $ref: '#/responses/successResponse'
                 "422":
                     $ref: '#/responses/invalidResponse'
             summary: Signs up a new user.
+    /user:
+        delete:
+            operationId: idDeleteUser
+            parameters:
+                - description: JWT Token
+                  in: header
+                  name: Authorization
+                  type: string
+            responses:
+                "200":
+                    $ref: '#/responses/successResponse'
+            summary: Delete user.
+            tags:
+                - Auth
+        get:
+            operationId: idGetUser
+            parameters:
+                - description: JWT Token
+                  in: header
+                  name: Authorization
+                  type: string
+            responses:
+                "201":
+                    $ref: '#/responses/successResponse'
+                "400":
+                    $ref: '#/responses/invalidResponse'
+                "401":
+                    $ref: '#/responses/invalidResponse'
+            summary: Get user.
+            tags:
+                - Auth
+        put:
+            operationId: idUpdateUser
+            parameters:
+                - description: JWT Token
+                  in: header
+                  name: Authorization
+                  type: string
+                - description: update user.
+                  in: body
+                  name: Body
+                  schema:
+                    $ref: '#/definitions/UserRequest'
+            responses:
+                "200":
+                    $ref: '#/responses/successResponse'
+                "422":
+                    $ref: '#/responses/invalidResponse'
+            summary: Update user details.
             tags:
                 - Auth
 responses:
@@ -93,16 +150,8 @@ responses:
                 Err:
                     type: string
             type: object
-    loginSuccessResponse:
-        description: Successful login response.
-        headers:
-            Authorization:
-                description: Authorization header
-                type: string
-        schema:
-            $ref: '#/definitions/UserResponse'
-    signUpSuccessResponse:
-        description: Successful sign up response.
+    successResponse:
+        description: Successful response.
         headers:
             Authorization:
                 description: Authorization header

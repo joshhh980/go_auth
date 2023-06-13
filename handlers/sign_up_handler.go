@@ -11,15 +11,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// swagger:route POST /sign_up Auth idSignUp
-// Signs up a new user.
+// swagger:route POST /sign_up idSignUp
+// Sign up user.
 // responses:
 //   201: successResponse
 //   422: invalidResponse
 
 // swagger:parameters idSignUp
 type signUpParamsWrapper struct {
-	// Signs up a new user.
+	// Signup request params.
 	// in:body
 	Body requests.SignUpRequest
 }

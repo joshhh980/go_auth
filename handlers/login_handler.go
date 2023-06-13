@@ -8,15 +8,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// swagger:route POST /login Auth idLogin
-// Logs in a user.
+// swagger:route POST /login idLogin
+// Log in user.
 // responses:
 //   201: successResponse
 //   422: invalidResponse
 
 // swagger:parameters idLogin
 type loginParamsWrapper struct {
-	// Login a user.
+	// Login request params.
 	// in:body
 	Body requests.LoginRequest
 }

@@ -9,8 +9,16 @@ import (
 	"net/http"
 )
 
-// swagger:route GET /user
-// Get current user.
+// swagger:parameters idGetUser idUpdateUser idDeleteUser
+type authParamsWrapper struct {
+	// JWT Token
+	// in:header
+	Authorization string
+}
+
+
+// swagger:route GET /user Auth idGetUser
+// Get user.
 // responses:
 //   201: successResponse
 //   401: invalidResponse
@@ -26,7 +34,7 @@ func ShowUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// swagger:route PUT /user idUpdateUser
+// swagger:route PUT /user Auth idUpdateUser
 // Update user details.
 // responses:
 //   200: successResponse
@@ -56,7 +64,7 @@ func UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user.BuildUser())
 }
 
-// swagger:route DELETE /user idDeleteUser
+// swagger:route DELETE /user Auth idDeleteUser
 // Delete user.
 // responses:
 //   200: successResponse
